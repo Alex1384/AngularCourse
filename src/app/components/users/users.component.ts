@@ -1,5 +1,5 @@
 import { User } from './../../models/User';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-users',
@@ -7,13 +7,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./users.component.sass']
 })
 export class UsersComponent implements OnInit {
-
+  user: User = {
+    firstName: '',
+    lastName: '',
+    email: '',
+  }
   users: User[];
   showExtended: boolean = true;
   loaded = false;
-  enableAdd: boolean = true;
-  currentClasses = {};
-  currentStyles = {};
+  enableAdd: boolean = false;
+  showUserForm: boolean = false;
+  @ViewChild('userForm') form: any;
+
 
   constructor() { }
 
@@ -24,38 +29,26 @@ export class UsersComponent implements OnInit {
         {
           firstName: 'John',
           lastName: 'Doe',
-          age: 30,
-          address: {
-            street: '50 Main st',
-            city: 'Boston',
-            state: 'MAS'
-          },
+          email: 'john@gmail.com',
           isActive: true,
-          registered: new Date('01/01/2018  08:30:00')
+          registered: new Date('01/01/2018  08:30:00'),
+          hide: true
         },
         {
           firstName: 'Kevin',
           lastName: 'Johnson',
-          age: 44,
-          address: {
-            street: '20 School st',
-            city: 'Lynn',
-            state: 'MAS'
-          },
+          email: 'kevin@yahoo.com',
           isActive: false,
-          registered: new Date('03/11/2017  06:30:00')
+          registered: new Date('03/11/2017  06:30:00'),
+          hide: true
         },
         {
           firstName: 'Karen',
           lastName: 'Williams',
-          age: 26,
-          address: {
-            street: '55 Mill st',
-            city: 'Miami',
-            state: 'Flo'
-          },
+          email: 'karen@aol.com',
           isActive: true,
-          registered: new Date('11/02/2016  10:30:00')
+          registered: new Date('11/02/2016  10:30:00'),
+          hide: true
         },
       ];
       this.loaded = true;
@@ -63,9 +56,18 @@ export class UsersComponent implements OnInit {
   }
 
 
-  addUser(user: User) {
-    this.users.push(user);
-  }
+  onSubmit({value, valid}: {value: User, valid: boolean}) {
+    if (!valid) {
+      console.log('Form is not valid');
+    } else {
+      value.isActive = true,
+      value.registered = new Date();
+      value.hide = true;
+      this.users.unshift(value);
 
+      this.form.reset();
+    }
+
+  }
 }
 
